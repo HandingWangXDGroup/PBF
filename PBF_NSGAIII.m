@@ -89,7 +89,7 @@ while Fes < maxFes
         ./repmat(max([Obj;DA.obj],[],1) - min([Obj;DA.obj],[],1),length(DA),1);
     DA_Nor_pre = (Obj - repmat(min([Obj;DA.obj],[],1),size(Obj,1),1))...
         ./repmat(max([Obj;DA.obj],[],1) - min([Obj;DA.obj],[],1),size(Obj,1),1);
-    Zmin = min([DA_Nor;DA_Nor_pre],[],1);
+    Zmin1 = min([DA_Nor;DA_Nor_pre],[],1);
     
     dist = zeros(size(DA_Nor_pre,1),size(DA_Nor,1));
     for i = 1:size(DA_Nor_pre,1)     % calculate the distance between candidate solutions and parents
@@ -98,7 +98,7 @@ while Fes < maxFes
         end
     end
     F1 = min(dist,[],2); % DI
-    dist_D = pdist2(DA_Nor_pre,repmat(Zmin,size(DA_Nor_pre,1),1));  % calculate the distance between candidate solutions and ideal point
+    dist_D = pdist2(DA_Nor_pre,repmat(Zmin1,size(DA_Nor_pre,1),1));  % calculate the distance between candidate solutions and ideal point
     F2 = dist_D(:,1);  % % convergence indicator
     
     newObj= [(-F1),F2]; 
@@ -114,6 +114,7 @@ while Fes < maxFes
     
     Population = EnvironmentalSelection(ALL,popsize,W,Zmin);
     Fes = Fes + size(PnewDec,1);
+    Zmin  = min(Population.obj,[],1);
     clc; fprintf('%s on %d-objective %d-variable (%6.2f%%), %.2fs passed...\n',problem.problem,problem.M,problem.D,Fes/maxFes*100,toc);
 end
 
